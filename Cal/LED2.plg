@@ -10,89 +10,160 @@ Project File Date:  12/30/2020
 Build target 'Target 1'
 assembling STARTUP.A51...
 compiling led.c...
-LED.C(78): error C141: syntax error near 'void'
+linking...
+Program Size: data=15.1 xdata=171 code=8190
+creating hex file from "LED2"...
+"LED2" - 0 Error(s), 0 Warning(s).
+Build target 'Target 1'
+assembling STARTUP.A51...
+compiling led.c...
+linking...
+Program Size: data=15.1 xdata=171 code=8190
+creating hex file from "LED2"...
+"LED2" - 0 Error(s), 0 Warning(s).
+Build target 'Target 1'
+assembling STARTUP.A51...
+compiling led.c...
+LED.C(3): warning C206: 'init': missing function-prototype
+LED.C(5): error C202: 'bef': undefined identifier
+LED.C(6): error C202: 'num': undefined identifier
+Target not created
+Build target 'Target 1'
+assembling STARTUP.A51...
+compiling led.c...
+LED.C(3): warning C206: 'init': missing function-prototype
+LED.C(5): error C202: 'bef': undefined identifier
+LED.C(6): error C202: 'num': undefined identifier
 Target not created
 Build target 'Target 1'
 assembling STARTUP.A51...
 compiling led.c...
 linking...
-Program Size: data=15.1 xdata=147 code=7103
+Program Size: data=15.1 xdata=171 code=8190
 creating hex file from "LED2"...
 "LED2" - 0 Error(s), 0 Warning(s).
 Build target 'Target 1'
 assembling STARTUP.A51...
 compiling led.c...
-LED.C(78): error C141: syntax error near 'void'
-LED.C(78): error C141: syntax error near ')'
-LED.C(78): error C141: syntax error near ')'
+CALCULATOR.H(17): error C141: syntax error near 'sbit'
+CALCULATOR.H(18): error C202: 'RS': undefined identifier
+CALCULATOR.H(19): error C141: syntax error near 'sbit'
+CALCULATOR.H(22): error C141: syntax error near 'sbit'
+CALCULATOR.H(24): error C141: syntax error near 'sbit'
+CALCULATOR.H(26): error C141: syntax error near 'sbit'
+CALCULATOR.H(28): error C141: syntax error near 'sbit'
+LED.C(25): error C279: 'ops': multiple initialization
+LED.C(42): error C231: 'ONE': redefinition
+LED.C(42): error C231: 'TWO': redefinition
+LED.C(42): error C231: 'THREE': redefinition
+LED.C(42): error C231: 'FOUR': redefinition
+LED.C(42): error C231: 'FIVE': redefinition
+LED.C(42): error C231: 'SIX': redefinition
+LED.C(42): error C231: 'SEVEN': redefinition
+LED.C(42): error C231: 'EIGHT': redefinition
+LED.C(43): error C231: 'TOTAL_STATE': redefinition
+LED.C(43): error C226: 'CAL_STATE': duplicate struct/union/enum tag
+LED.C(43): error C231: 'CAL_STATE': redefinition
+LED.C(562): error C211: call not to a function
 Target not created
 Build target 'Target 1'
 assembling STARTUP.A51...
 compiling led.c...
-LED.C(78): error C141: syntax error near 'void'
-LED.C(78): error C141: syntax error near ')'
-LED.C(78): error C141: syntax error near ')'
+CALCULATOR.H(17): error C141: syntax error near ';', expected '='
+CALCULATOR.H(18): error C202: 'RS': undefined identifier
+CALCULATOR.H(19): error C141: syntax error near 'sbit'
+CALCULATOR.H(22): error C141: syntax error near 'sbit'
+CALCULATOR.H(24): error C141: syntax error near 'sbit'
+CALCULATOR.H(26): error C141: syntax error near 'sbit'
+CALCULATOR.H(28): error C141: syntax error near 'sbit'
+LED.C(25): error C279: 'ops': multiple initialization
+LED.C(42): error C231: 'ONE': redefinition
+LED.C(42): error C231: 'TWO': redefinition
+LED.C(42): error C231: 'THREE': redefinition
+LED.C(42): error C231: 'FOUR': redefinition
+LED.C(42): error C231: 'FIVE': redefinition
+LED.C(42): error C231: 'SIX': redefinition
+LED.C(42): error C231: 'SEVEN': redefinition
+LED.C(42): error C231: 'EIGHT': redefinition
+LED.C(43): error C231: 'TOTAL_STATE': redefinition
+LED.C(43): error C226: 'CAL_STATE': duplicate struct/union/enum tag
+LED.C(43): error C231: 'CAL_STATE': redefinition
+LED.C(562): error C211: call not to a function
 Target not created
 Build target 'Target 1'
 assembling STARTUP.A51...
 compiling led.c...
-LED.C(78): error C141: syntax error near 'void'
-LED.C(78): error C129: missing ';' before ')'
+LED.C(4): error C231: 'EN': redefinition
+LED.C(5): error C231: 'RS': redefinition
+LED.C(6): error C231: 'RW': redefinition
+LED.C(8): error C231: 'K1': redefinition
+LED.C(9): error C231: 'K2': redefinition
+LED.C(10): error C231: 'K3': redefinition
+LED.C(11): error C231: 'K4': redefinition
+LED.C(12): error C231: 'K5': redefinition
+LED.C(13): error C231: 'K6': redefinition
+LED.C(14): error C231: 'K7': redefinition
+LED.C(15): error C231: 'K8': redefinition
+LED.C(16): error C231: 'BEEP': redefinition
+LED.C(25): error C279: 'ops': multiple initialization
+LED.C(42): error C231: 'ONE': redefinition
+LED.C(42): error C231: 'TWO': redefinition
+LED.C(42): error C231: 'THREE': redefinition
+LED.C(42): error C231: 'FOUR': redefinition
+LED.C(42): error C231: 'FIVE': redefinition
+LED.C(42): error C231: 'SIX': redefinition
+LED.C(42): error C231: 'SEVEN': redefinition
+LED.C(42): error C231: 'EIGHT': redefinition
+LED.C(43): error C231: 'TOTAL_STATE': redefinition
+LED.C(43): error C226: 'CAL_STATE': duplicate struct/union/enum tag
+LED.C(43): error C231: 'CAL_STATE': redefinition
+LED.C(562): error C211: call not to a function
+Target not created
+Build target 'Target 1'
+assembling STARTUP.A51...
+compiling led.c...
+LED.C(12): error C279: 'ops': multiple initialization
+LED.C(29): error C231: 'ONE': redefinition
+LED.C(29): error C231: 'TWO': redefinition
+LED.C(29): error C231: 'THREE': redefinition
+LED.C(29): error C231: 'FOUR': redefinition
+LED.C(29): error C231: 'FIVE': redefinition
+LED.C(29): error C231: 'SIX': redefinition
+LED.C(29): error C231: 'SEVEN': redefinition
+LED.C(29): error C231: 'EIGHT': redefinition
+LED.C(30): error C231: 'TOTAL_STATE': redefinition
+LED.C(30): error C226: 'CAL_STATE': duplicate struct/union/enum tag
+LED.C(30): error C231: 'CAL_STATE': redefinition
+LED.C(549): error C211: call not to a function
+Target not created
+Build target 'Target 1'
+assembling STARTUP.A51...
+compiling led.c...
+LED.C(29): error C231: 'ONE': redefinition
+LED.C(29): error C231: 'TWO': redefinition
+LED.C(29): error C231: 'THREE': redefinition
+LED.C(29): error C231: 'FOUR': redefinition
+LED.C(29): error C231: 'FIVE': redefinition
+LED.C(29): error C231: 'SIX': redefinition
+LED.C(29): error C231: 'SEVEN': redefinition
+LED.C(29): error C231: 'EIGHT': redefinition
+LED.C(30): error C231: 'TOTAL_STATE': redefinition
+LED.C(30): error C226: 'CAL_STATE': duplicate struct/union/enum tag
+LED.C(30): error C231: 'CAL_STATE': redefinition
+LED.C(549): error C211: call not to a function
 Target not created
 Build target 'Target 1'
 assembling STARTUP.A51...
 compiling led.c...
 linking...
-Program Size: data=15.1 xdata=147 code=7103
+Program Size: data=15.1 xdata=171 code=8190
 creating hex file from "LED2"...
 "LED2" - 0 Error(s), 0 Warning(s).
 Build target 'Target 1'
 assembling STARTUP.A51...
 compiling led.c...
 linking...
-Program Size: data=15.1 xdata=177 code=8195
-creating hex file from "LED2"...
-"LED2" - 0 Error(s), 0 Warning(s).
-Build target 'Target 1'
-assembling STARTUP.A51...
-compiling led.c...
-linking...
-Program Size: data=15.1 xdata=177 code=8230
-creating hex file from "LED2"...
-"LED2" - 0 Error(s), 0 Warning(s).
-Build target 'Target 1'
-assembling STARTUP.A51...
-compiling led.c...
-linking...
-Program Size: data=15.1 xdata=177 code=8212
-creating hex file from "LED2"...
-"LED2" - 0 Error(s), 0 Warning(s).
-Build target 'Target 1'
-assembling STARTUP.A51...
-compiling led.c...
-linking...
-Program Size: data=15.1 xdata=171 code=8195
-creating hex file from "LED2"...
-"LED2" - 0 Error(s), 0 Warning(s).
-Build target 'Target 1'
-assembling STARTUP.A51...
-compiling led.c...
-linking...
-Program Size: data=15.1 xdata=171 code=8195
-creating hex file from "LED2"...
-"LED2" - 0 Error(s), 0 Warning(s).
-Build target 'Target 1'
-assembling STARTUP.A51...
-compiling led.c...
-linking...
-Program Size: data=15.1 xdata=171 code=8195
-creating hex file from "LED2"...
-"LED2" - 0 Error(s), 0 Warning(s).
-Build target 'Target 1'
-assembling STARTUP.A51...
-compiling led.c...
-linking...
-Program Size: data=15.1 xdata=171 code=8191
+Program Size: data=15.1 xdata=171 code=8190
 creating hex file from "LED2"...
 "LED2" - 0 Error(s), 0 Warning(s).
 Build target 'Target 1'
