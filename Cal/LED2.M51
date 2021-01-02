@@ -1,4 +1,4 @@
-BL51 BANKED LINKER/LOCATER V5.03                                                        01/02/2021  13:31:18  PAGE 1
+BL51 BANKED LINKER/LOCATER V5.03                                                        01/02/2021  13:43:35  PAGE 1
 
 
 BL51 BANKED LINKER/LOCATER V5.03, INVOKED BY:
@@ -59,16 +59,16 @@ LINK MAP OF MODULE:  LED2 (?C_STARTUP)
             * * * * * * *   C O D E   M E M O R Y   * * * * * * *
             CODE    0000H     0003H     ABSOLUTE     
             CODE    0003H     0736H     UNIT         ?C?LIB_CODE
-BL51 BANKED LINKER/LOCATER V5.03                                                      01/02/2021  13:31:18  PAGE 2
+BL51 BANKED LINKER/LOCATER V5.03                                                      01/02/2021  13:43:35  PAGE 2
 
 
             CODE    0739H     0483H     UNIT         ?PR?PRINTF?PRINTF
             CODE    0BBCH     0273H     UNIT         ?PR?_PUSHOPERARRAY?LED
-            CODE    0E2FH     0219H     UNIT         ?PR?MY_STATE_MULTYSQRT?LED
-            CODE    1048H     0219H     UNIT         ?PR?MY_STATE_DIVIDE?LED
+            CODE    0E2FH     0219H     UNIT         ?PR?MY_STATE_MULTISECOND?LED
+            CODE    1048H     0219H     UNIT         ?PR?MY_STATE_DIVIDESECOND?LED
             CODE    1261H     01ADH     UNIT         ?PR?MY_STATE_ADDMINS?LED
-            CODE    140EH     0195H     UNIT         ?PR?MY_STATE_MULTY?LED
-            CODE    15A3H     0195H     UNIT         ?PR?MY_STATE_DIVIDESQRT?LED
+            CODE    140EH     0195H     UNIT         ?PR?MY_STATE_MULTIFIRST?LED
+            CODE    15A3H     0195H     UNIT         ?PR?MY_STATE_DIVIDEFIRST?LED
             CODE    1738H     0143H     UNIT         ?PR?FIRSTCACULATE?LED
             CODE    187BH     0143H     UNIT         ?PR?LASTCACULATE?LED
             CODE    19BEH     0124H     UNIT         ?PR?_SCANF2?LED
@@ -96,104 +96,104 @@ LINK MAP OF MODULE:  LED2 (?C_STARTUP)
 OVERLAY MAP OF MODULE:   LED2 (?C_STARTUP)
 
 
-SEGMENT                                BIT_GROUP          DATA_GROUP          XDATA_GROUP
-  +--> CALLED SEGMENT               START    LENGTH     START    LENGTH     START    LENGTH
--------------------------------------------------------------------------------------------
-?C_C51STARTUP                       -----    -----      -----    -----      -----    -----
+SEGMENT                                  BIT_GROUP          DATA_GROUP          XDATA_GROUP
+  +--> CALLED SEGMENT                 START    LENGTH     START    LENGTH     START    LENGTH
+---------------------------------------------------------------------------------------------
+?C_C51STARTUP                         -----    -----      -----    -----      -----    -----
   +--> ?PR?MAIN?LED
   +--> ?C_INITSEG
 
-?PR?MAIN?LED                        -----    -----      -----    -----      -----    -----
+?PR?MAIN?LED                          -----    -----      -----    -----      -----    -----
   +--> ?PR?INIT?LED
   +--> ?PR?_SCANF2?LED
   +--> ?PR?STATECHANGE?LED
 
-?PR?INIT?LED                        -----    -----      -----    -----      -----    -----
+?PR?INIT?LED                          -----    -----      -----    -----      -----    -----
   +--> ?PR?_WRITECMD?LED
 
-?PR?_WRITECMD?LED                   -----    -----      -----    -----      -----    -----
+?PR?_WRITECMD?LED                     -----    -----      -----    -----      -----    -----
   +--> ?PR?DELAY5MS?LED
 
-?PR?_SCANF2?LED                     -----    -----      -----    -----      005BH    0006H
+?PR?_SCANF2?LED                       -----    -----      -----    -----      005BH    0006H
   +--> ?PR?DELAY100MS?LED
   +--> ?PR?CLEAR?LED
 
-?PR?CLEAR?LED                       -----    -----      -----    -----      -----    -----
-BL51 BANKED LINKER/LOCATER V5.03                                                      01/02/2021  13:31:18  PAGE 3
+?PR?CLEAR?LED                         -----    -----      -----    -----      -----    -----
+BL51 BANKED LINKER/LOCATER V5.03                                                      01/02/2021  13:43:35  PAGE 3
 
 
   +--> ?PR?_WRITECMD?LED
 
-?C_INITSEG                          -----    -----      -----    -----      -----    -----
+?C_INITSEG                            -----    -----      -----    -----      -----    -----
   +--> ?PR?MY_STATE_INIT?LED
   +--> ?PR?MY_STATE_CORE?LED
   +--> ?PR?MY_STATE_ADDMINS?LED
-  +--> ?PR?MY_STATE_MULTY?LED
-  +--> ?PR?MY_STATE_DIVIDESQRT?LED
-  +--> ?PR?MY_STATE_MULTYSQRT?LED
-  +--> ?PR?MY_STATE_DIVIDE?LED
+  +--> ?PR?MY_STATE_MULTIFIRST?LED
+  +--> ?PR?MY_STATE_DIVIDEFIRST?LED
+  +--> ?PR?MY_STATE_MULTISECOND?LED
+  +--> ?PR?MY_STATE_DIVIDESECOND?LED
   +--> ?PR?MY_STATE_DONE?LED
   +--> ?CO?LED
 
-?PR?MY_STATE_INIT?LED               -----    -----      -----    -----      -----    -----
+?PR?MY_STATE_INIT?LED                 -----    -----      -----    -----      -----    -----
   +--> ?PR?_SHOWDATA?LED
   +--> ?PR?BEEP?LED
 
-?PR?_SHOWDATA?LED                   -----    -----      -----    -----      -----    -----
+?PR?_SHOWDATA?LED                     -----    -----      -----    -----      -----    -----
   +--> ?PR?_WRITECMD?LED
   +--> ?PR?DELAY5MS?LED
 
-?PR?MY_STATE_CORE?LED               -----    -----      -----    -----      -----    -----
+?PR?MY_STATE_CORE?LED                 -----    -----      -----    -----      -----    -----
   +--> ?PR?_PUSHOPERARRAY?LED
   +--> ?PR?_SHOWDATA?LED
   +--> ?PR?SHOWANSWER?LED
   +--> ?PR?BEEP?LED
 
-?PR?_PUSHOPERARRAY?LED              -----    -----      -----    -----      005BH    000EH
+?PR?_PUSHOPERARRAY?LED                -----    -----      -----    -----      005BH    000EH
   +--> ?PR?SQRT?SQRT
 
-?PR?SQRT?SQRT                       -----    -----      -----    -----      0069H    0004H
+?PR?SQRT?SQRT                         -----    -----      -----    -----      0069H    0004H
 
-?PR?SHOWANSWER?LED                  -----    -----      -----    -----      005BH    0020H
+?PR?SHOWANSWER?LED                    -----    -----      -----    -----      005BH    0020H
   +--> ?CO?LED
   +--> ?PR?PRINTF?PRINTF
   +--> ?PR?_WRITECMD?LED
   +--> ?PR?_SHOWDATA?LED
 
-?PR?PRINTF?PRINTF                   0020H.0  0001H.1    0008H    0005H      007BH    0030H
+?PR?PRINTF?PRINTF                     0020H.0  0001H.1    0008H    0005H      007BH    0030H
   +--> ?PR?PUTCHAR?PUTCHAR
 
-?PR?MY_STATE_ADDMINS?LED            -----    -----      -----    -----      -----    -----
+?PR?MY_STATE_ADDMINS?LED              -----    -----      -----    -----      -----    -----
   +--> ?PR?_PUSHOPERARRAY?LED
   +--> ?PR?FIRSTCACULATE?LED
   +--> ?PR?_SHOWDATA?LED
   +--> ?PR?SHOWANSWER?LED
   +--> ?PR?BEEP?LED
 
-?PR?FIRSTCACULATE?LED               -----    -----      -----    -----      005BH    0014H
+?PR?FIRSTCACULATE?LED                 -----    -----      -----    -----      005BH    0014H
   +--> ?CO?LED
   +--> ?PR?DELAY5MS?LED
   +--> ?PR?CLEAR?LED
   +--> ?PR?_SHOWDATA?LED
 
-?PR?MY_STATE_MULTY?LED              -----    -----      -----    -----      -----    -----
+?PR?MY_STATE_MULTIFIRST?LED           -----    -----      -----    -----      -----    -----
   +--> ?PR?_PUSHOPERARRAY?LED
   +--> ?PR?FIRSTCACULATE?LED
-BL51 BANKED LINKER/LOCATER V5.03                                                      01/02/2021  13:31:18  PAGE 4
+BL51 BANKED LINKER/LOCATER V5.03                                                      01/02/2021  13:43:35  PAGE 4
 
 
   +--> ?PR?_SHOWDATA?LED
   +--> ?PR?SHOWANSWER?LED
   +--> ?PR?BEEP?LED
 
-?PR?MY_STATE_DIVIDESQRT?LED         -----    -----      -----    -----      -----    -----
+?PR?MY_STATE_DIVIDEFIRST?LED          -----    -----      -----    -----      -----    -----
   +--> ?PR?_PUSHOPERARRAY?LED
   +--> ?PR?FIRSTCACULATE?LED
   +--> ?PR?_SHOWDATA?LED
   +--> ?PR?SHOWANSWER?LED
   +--> ?PR?BEEP?LED
 
-?PR?MY_STATE_MULTYSQRT?LED          -----    -----      -----    -----      -----    -----
+?PR?MY_STATE_MULTISECOND?LED          -----    -----      -----    -----      -----    -----
   +--> ?PR?_PUSHOPERARRAY?LED
   +--> ?PR?LASTCACULATE?LED
   +--> ?PR?FIRSTCACULATE?LED
@@ -201,13 +201,13 @@ SEGMENT                                BIT_GROUP          DATA_GROUP          XD
   +--> ?PR?SHOWANSWER?LED
   +--> ?PR?BEEP?LED
 
-?PR?LASTCACULATE?LED                -----    -----      -----    -----      005BH    0014H
+?PR?LASTCACULATE?LED                  -----    -----      -----    -----      005BH    0014H
   +--> ?CO?LED
   +--> ?PR?DELAY5MS?LED
   +--> ?PR?CLEAR?LED
   +--> ?PR?_SHOWDATA?LED
 
-?PR?MY_STATE_DIVIDE?LED             -----    -----      -----    -----      -----    -----
+?PR?MY_STATE_DIVIDESECOND?LED         -----    -----      -----    -----      -----    -----
   +--> ?PR?_PUSHOPERARRAY?LED
   +--> ?PR?LASTCACULATE?LED
   +--> ?PR?FIRSTCACULATE?LED
@@ -215,7 +215,7 @@ SEGMENT                                BIT_GROUP          DATA_GROUP          XD
   +--> ?PR?SHOWANSWER?LED
   +--> ?PR?BEEP?LED
 
-?PR?MY_STATE_DONE?LED               -----    -----      -----    -----      -----    -----
+?PR?MY_STATE_DONE?LED                 -----    -----      -----    -----      -----    -----
   +--> ?PR?_SHOWDATA?LED
   +--> ?PR?BEEP?LED
 
@@ -239,7 +239,7 @@ SYMBOL TABLE OF MODULE:  LED2 (?C_STARTUP)
   N:0080H         SYMBOL        IDATALEN
   C:1DCAH         SYMBOL        IDATALOOP
   N:0000H         SYMBOL        PBPSTACK
-BL51 BANKED LINKER/LOCATER V5.03                                                      01/02/2021  13:31:18  PAGE 5
+BL51 BANKED LINKER/LOCATER V5.03                                                      01/02/2021  13:43:35  PAGE 5
 
 
   N:0000H         SYMBOL        PBPSTACKTOP
@@ -273,7 +273,6 @@ SYMBOL TABLE OF MODULE:  LED2 (?C_STARTUP)
   X:0000H         PUBLIC        QUEUE
   C:1FF7H         PUBLIC        clear
   B:00A0H.7       PUBLIC        EN
-  C:0E2FH         PUBLIC        My_state_MULTYSQRT
   X:0010H         PUBLIC        states
   X:0028H         PUBLIC        index
   B:00A0H.5       PUBLIC        BEEP
@@ -282,6 +281,7 @@ SYMBOL TABLE OF MODULE:  LED2 (?C_STARTUP)
   X:0029H         PUBLIC        operand1
   C:1EFFH         PUBLIC        _showData
   C:19BEH         PUBLIC        _scanf2
+  C:1048H         PUBLIC        My_state_DIVIDESECOND
   X:0035H         PUBLIC        operator1
   X:0036H         PUBLIC        operator2
   X:0037H         PUBLIC        state
@@ -292,29 +292,29 @@ SYMBOL TABLE OF MODULE:  LED2 (?C_STARTUP)
   B:00A0H.5       PUBLIC        RW
   X:003AH         PUBLIC        bef
   C:1261H         PUBLIC        My_state_ADDMINS
-  C:15A3H         PUBLIC        My_state_DIVIDESQRT
   C:1F66H         PUBLIC        init
   C:1E53H         PUBLIC        showAnswer
   C:1F5AH         SYMBOL        _?ix1000
   C:1F60H         SYMBOL        _?ix1001
+  C:140EH         PUBLIC        My_state_MULTIFIRST
   C:1FE8H         PUBLIC        delay100MS
-  C:140EH         PUBLIC        My_state_MULTY
-BL51 BANKED LINKER/LOCATER V5.03                                                      01/02/2021  13:31:18  PAGE 6
-
-
   X:003BH         PUBLIC        num
+BL51 BANKED LINKER/LOCATER V5.03                                                      01/02/2021  13:43:35  PAGE 6
+
+
   C:1D20H         PUBLIC        My_state_DONE
   C:173DH         PUBLIC        firstCaculate
   X:003CH         PUBLIC        ops
   C:1AE2H         PUBLIC        My_state_CORE
   C:1880H         PUBLIC        lastCaculate
   C:1BB6H         PUBLIC        My_state_INIT
-  C:1048H         PUBLIC        My_state_DIVIDE
   C:1FC8H         PUBLIC        _writeCMD
   X:003FH         PUBLIC        KEY_CODE
   C:1FD9H         PUBLIC        delay5MS
   X:004FH         PUBLIC        operand
+  C:15A3H         PUBLIC        My_state_DIVIDEFIRST
   C:1F81H         PUBLIC        stateChange
+  C:0E2FH         PUBLIC        My_state_MULTISECOND
   B:0090H.0       PUBLIC        K1
   B:0090H.1       PUBLIC        K2
   B:0090H.2       PUBLIC        K3
@@ -359,7 +359,7 @@ SYMBOL TABLE OF MODULE:  LED2 (?C_STARTUP)
   C:1B15H         LINE#         114
   C:1B1AH         LINE#         115
   C:1B1AH         LINE#         117
-BL51 BANKED LINKER/LOCATER V5.03                                                      01/02/2021  13:31:18  PAGE 7
+BL51 BANKED LINKER/LOCATER V5.03                                                      01/02/2021  13:43:35  PAGE 7
 
 
   C:1B1AH         LINE#         119
@@ -419,7 +419,7 @@ SYMBOL TABLE OF MODULE:  LED2 (?C_STARTUP)
   C:12D1H         LINE#         181
   C:12D6H         LINE#         183
   C:12DFH         LINE#         184
-BL51 BANKED LINKER/LOCATER V5.03                                                      01/02/2021  13:31:18  PAGE 8
+BL51 BANKED LINKER/LOCATER V5.03                                                      01/02/2021  13:43:35  PAGE 8
 
 
   C:12DFH         LINE#         185
@@ -464,7 +464,7 @@ SYMBOL TABLE OF MODULE:  LED2 (?C_STARTUP)
   C:140DH         LINE#         225
   C:140DH         LINE#         226
   -------         ENDPROC       MY_STATE_ADDMINS
-  -------         PROC          MY_STATE_MULTY
+  -------         PROC          MY_STATE_MULTIFIRST
   C:140EH         LINE#         229
   C:140EH         LINE#         230
   C:1428H         LINE#         231
@@ -479,7 +479,7 @@ SYMBOL TABLE OF MODULE:  LED2 (?C_STARTUP)
   C:1447H         LINE#         241
   C:1447H         LINE#         242
   C:1447H         LINE#         243
-BL51 BANKED LINKER/LOCATER V5.03                                                      01/02/2021  13:31:18  PAGE 9
+BL51 BANKED LINKER/LOCATER V5.03                                                      01/02/2021  13:43:35  PAGE 9
 
 
   C:1451H         LINE#         245
@@ -536,10 +536,10 @@ SYMBOL TABLE OF MODULE:  LED2 (?C_STARTUP)
   C:159FH         LINE#         300
   C:15A2H         LINE#         301
   C:15A2H         LINE#         302
-  -------         ENDPROC       MY_STATE_MULTY
-  -------         PROC          MY_STATE_DIVIDESQRT
+  -------         ENDPROC       MY_STATE_MULTIFIRST
+  -------         PROC          MY_STATE_DIVIDEFIRST
   C:15A3H         LINE#         304
-BL51 BANKED LINKER/LOCATER V5.03                                                      01/02/2021  13:31:18  PAGE 10
+BL51 BANKED LINKER/LOCATER V5.03                                                      01/02/2021  13:43:35  PAGE 10
 
 
   C:15A3H         LINE#         305
@@ -599,7 +599,7 @@ SYMBOL TABLE OF MODULE:  LED2 (?C_STARTUP)
   C:16C9H         LINE#         366
   C:16C9H         LINE#         367
   C:16CCH         LINE#         368
-BL51 BANKED LINKER/LOCATER V5.03                                                      01/02/2021  13:31:18  PAGE 11
+BL51 BANKED LINKER/LOCATER V5.03                                                      01/02/2021  13:43:35  PAGE 11
 
 
   C:16E0H         LINE#         369
@@ -612,8 +612,8 @@ SYMBOL TABLE OF MODULE:  LED2 (?C_STARTUP)
   C:1734H         LINE#         376
   C:1737H         LINE#         377
   C:1737H         LINE#         378
-  -------         ENDPROC       MY_STATE_DIVIDESQRT
-  -------         PROC          MY_STATE_MULTYSQRT
+  -------         ENDPROC       MY_STATE_DIVIDEFIRST
+  -------         PROC          MY_STATE_MULTISECOND
   C:0E2FH         LINE#         380
   C:0E2FH         LINE#         382
   C:0E49H         LINE#         383
@@ -659,7 +659,7 @@ SYMBOL TABLE OF MODULE:  LED2 (?C_STARTUP)
   C:0F5AH         LINE#         431
   C:0F62H         LINE#         432
   C:0F65H         LINE#         433
-BL51 BANKED LINKER/LOCATER V5.03                                                      01/02/2021  13:31:18  PAGE 12
+BL51 BANKED LINKER/LOCATER V5.03                                                      01/02/2021  13:43:35  PAGE 12
 
 
   C:0F68H         LINE#         434
@@ -688,8 +688,8 @@ SYMBOL TABLE OF MODULE:  LED2 (?C_STARTUP)
   C:1044H         LINE#         458
   C:1047H         LINE#         459
   C:1047H         LINE#         460
-  -------         ENDPROC       MY_STATE_MULTYSQRT
-  -------         PROC          MY_STATE_DIVIDE
+  -------         ENDPROC       MY_STATE_MULTISECOND
+  -------         PROC          MY_STATE_DIVIDESECOND
   C:1048H         LINE#         462
   C:1048H         LINE#         463
   C:1062H         LINE#         464
@@ -719,7 +719,7 @@ SYMBOL TABLE OF MODULE:  LED2 (?C_STARTUP)
   C:1109H         LINE#         491
   C:1112H         LINE#         492
   C:1112H         LINE#         493
-BL51 BANKED LINKER/LOCATER V5.03                                                      01/02/2021  13:31:18  PAGE 13
+BL51 BANKED LINKER/LOCATER V5.03                                                      01/02/2021  13:43:35  PAGE 13
 
 
   C:111DH         LINE#         494
@@ -764,7 +764,7 @@ SYMBOL TABLE OF MODULE:  LED2 (?C_STARTUP)
   C:125DH         LINE#         534
   C:1260H         LINE#         535
   C:1260H         LINE#         536
-  -------         ENDPROC       MY_STATE_DIVIDE
+  -------         ENDPROC       MY_STATE_DIVIDESECOND
   -------         PROC          MY_STATE_DONE
   C:1D20H         LINE#         539
   C:1D20H         LINE#         540
@@ -779,7 +779,7 @@ SYMBOL TABLE OF MODULE:  LED2 (?C_STARTUP)
   C:1D72H         LINE#         549
   C:1D86H         LINE#         550
   C:1D9AH         LINE#         551
-BL51 BANKED LINKER/LOCATER V5.03                                                      01/02/2021  13:31:18  PAGE 14
+BL51 BANKED LINKER/LOCATER V5.03                                                      01/02/2021  13:43:35  PAGE 14
 
 
   C:1DA0H         LINE#         552
@@ -839,7 +839,7 @@ SYMBOL TABLE OF MODULE:  LED2 (?C_STARTUP)
   C:1A1AH         LINE#         89
   C:1A1DH         LINE#         90
   C:1A20H         LINE#         91
-BL51 BANKED LINKER/LOCATER V5.03                                                      01/02/2021  13:31:18  PAGE 15
+BL51 BANKED LINKER/LOCATER V5.03                                                      01/02/2021  13:43:35  PAGE 15
 
 
   C:1A30H         LINE#         92
@@ -899,7 +899,7 @@ SYMBOL TABLE OF MODULE:  LED2 (?C_STARTUP)
   C:0C54H         LINE#         131
   C:0C6DH         LINE#         132
   C:0CAAH         LINE#         133
-BL51 BANKED LINKER/LOCATER V5.03                                                      01/02/2021  13:31:18  PAGE 16
+BL51 BANKED LINKER/LOCATER V5.03                                                      01/02/2021  13:43:35  PAGE 16
 
 
   C:0CB3H         LINE#         134
@@ -959,7 +959,7 @@ SYMBOL TABLE OF MODULE:  LED2 (?C_STARTUP)
   C:1F03H         LINE#         174
   C:1F05H         LINE#         175
   C:1F0AH         LINE#         176
-BL51 BANKED LINKER/LOCATER V5.03                                                      01/02/2021  13:31:18  PAGE 17
+BL51 BANKED LINKER/LOCATER V5.03                                                      01/02/2021  13:43:35  PAGE 17
 
 
   C:1F0FH         LINE#         177
@@ -1019,7 +1019,7 @@ SYMBOL TABLE OF MODULE:  LED2 (?C_STARTUP)
   C:1811H         LINE#         220
   C:1836H         LINE#         221
   C:1838H         LINE#         222
-BL51 BANKED LINKER/LOCATER V5.03                                                      01/02/2021  13:31:18  PAGE 18
+BL51 BANKED LINKER/LOCATER V5.03                                                      01/02/2021  13:43:35  PAGE 18
 
 
   C:183BH         LINE#         223
@@ -1079,7 +1079,7 @@ SYMBOL TABLE OF MODULE:  LED2 (?C_STARTUP)
   C:1992H         LINE#         268
   C:1995H         LINE#         269
   C:19A3H         LINE#         270
-BL51 BANKED LINKER/LOCATER V5.03                                                      01/02/2021  13:31:18  PAGE 19
+BL51 BANKED LINKER/LOCATER V5.03                                                      01/02/2021  13:43:35  PAGE 19
 
 
   C:19A3H         LINE#         271
@@ -1139,7 +1139,7 @@ SYMBOL TABLE OF MODULE:  LED2 (?C_STARTUP)
   C:02A3H         PUBLIC        ?C?FPCMP
   C:02A1H         PUBLIC        ?C?FPCMP3
   -------         ENDMOD        ?C?FPCMP
-BL51 BANKED LINKER/LOCATER V5.03                                                      01/02/2021  13:31:18  PAGE 20
+BL51 BANKED LINKER/LOCATER V5.03                                                      01/02/2021  13:43:35  PAGE 20
 
 
 
@@ -1199,7 +1199,7 @@ SYMBOL TABLE OF MODULE:  LED2 (?C_STARTUP)
   -------         MODULE        ?C?LSTXDATA
   C:06B0H         PUBLIC        ?C?LSTXDATA
   -------         ENDMOD        ?C?LSTXDATA
-BL51 BANKED LINKER/LOCATER V5.03                                                      01/02/2021  13:31:18  PAGE 21
+BL51 BANKED LINKER/LOCATER V5.03                                                      01/02/2021  13:43:35  PAGE 21
 
 
 

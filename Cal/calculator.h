@@ -35,7 +35,7 @@ extern uchar bef ;
 //	uchar start=0;
 
 typedef enum CAL_STATE {
-    INIT, CORE, ADDMINS, MULTY, DIVIDESQRT, MULTYSQRT, DIVIDE, DONE, TOTAL_STATE
+    INIT, CORE, ADDMINS, MULTIFIRST, DIVIDEFIRST, MULTISECOND, DIVIDESECOND, DONE, TOTAL_STATE
 } CAL_STATE;
 extern CAL_STATE state ;
 extern unsigned char operator1, operator2;
@@ -119,14 +119,14 @@ void My_state_CORE() {
         operator1 = num;
         showData(num);
     } else if (num == '*') {
-        state = MULTY;
+        state = MULTIFIRST;
         PushOperArray(QUEUE, index, 0);
         //print(QUEUE,i);
         index = 0;
         operator1 = num;
         showData(num);
     } else if (num == '/') {
-        state = DIVIDESQRT;
+        state = DIVIDEFIRST;
         PushOperArray(QUEUE, index, 0);
         //print(QUEUE,i);
         index = 0;
@@ -167,7 +167,7 @@ void My_state_ADDMINS() {
 
 
     } else if (num == '*')  {
-        state = MULTYSQRT;
+        state = MULTISECOND;
         PushOperArray(QUEUE, index, 1);
         // print(QUEUE,i);
         index = 0;
@@ -175,7 +175,7 @@ void My_state_ADDMINS() {
         operator2 = num;
         showData(num);
     } else if (num == '/') {
-        state = DIVIDE;
+        state = DIVIDESECOND;
         PushOperArray(QUEUE, index, 1);
         //print(QUEUE,i);
         index = 0;
@@ -226,9 +226,9 @@ void My_state_ADDMINS() {
 }
 
 
-void My_state_MULTY() {
+void My_state_MULTIFIRST() {
     if ((num >= '0' && num <= '9') && (index < MAX_LEN)){
-        state = MULTY;
+        state = MULTIFIRST;
         QUEUE[index] = num;
         showData(num);
         index++;
@@ -242,7 +242,7 @@ void My_state_MULTY() {
         showData(num);
     } else if (num == '*') {
         // caculate();
-        state = MULTY;
+        state = MULTIFIRST;
         PushOperArray(QUEUE, index, 1);
         // print(QUEUE,i);
         index = 0;
@@ -251,7 +251,7 @@ void My_state_MULTY() {
         showData(num);
     } else if (num == '/') {
         //caculate();
-        state = DIVIDESQRT;
+        state = DIVIDEFIRST;
         PushOperArray(QUEUE, index, 1);
         // print(QUEUE,i);
         index = 0;
@@ -259,12 +259,12 @@ void My_state_MULTY() {
         operator1 = num;
         showData(num);
     } else if (num == '.') {
-        state = MULTY;
+        state = MULTIFIRST;
         QUEUE[index] = num;
         showData(num);
         index++;
     } else if (num == '~') {
-        state = MULTY;
+        state = MULTIFIRST;
         QUEUE[index] = num;
         showData(num);
         index++;
@@ -301,9 +301,9 @@ void My_state_MULTY() {
     }
 }
 
-void My_state_DIVIDESQRT() {
+void My_state_DIVIDEFIRST() {
     if ((num >= '0' && num <= '9') && (index < MAX_LEN)) {
-        state = DIVIDESQRT;
+        state = DIVIDEFIRST;
         QUEUE[index] = num;
         showData(num);
         index++;
@@ -318,7 +318,7 @@ void My_state_DIVIDESQRT() {
         showData(num);
     } else if (num == '*') {
         //caculate();
-        state = MULTY;
+        state = MULTIFIRST;
         PushOperArray(QUEUE, index, 1);
         // print(QUEUE,i);
         index = 0;
@@ -327,7 +327,7 @@ void My_state_DIVIDESQRT() {
         showData(num);
     } else if (num == '/') {
         //caculate();
-        state = DIVIDESQRT;
+        state = DIVIDEFIRST;
         PushOperArray(QUEUE, index, 1);
         // print(QUEUE,i);
         index = 0;
@@ -335,12 +335,12 @@ void My_state_DIVIDESQRT() {
         operator1 = num;
         showData(num);
     } else if (num == '.') {
-        state = DIVIDESQRT;
+        state = DIVIDEFIRST;
         QUEUE[index] = num;
         showData(num);
         index++;
     } else if (num == '~') {
-        state = DIVIDESQRT;
+        state = DIVIDEFIRST;
         QUEUE[index] = num;
         showData(num);
         index++;
@@ -377,10 +377,10 @@ void My_state_DIVIDESQRT() {
     }
 }
 
-void My_state_MULTYSQRT() {
+void My_state_MULTISECOND() {
 
     if ((num >= '0' && num <= '9') && (index < MAX_LEN)) {
-        state = MULTYSQRT;
+        state = MULTISECOND;
         QUEUE[index] = num;
         showData(num);
         index++;
@@ -398,7 +398,7 @@ void My_state_MULTYSQRT() {
 
     } else if (num == '*') {
         //caculate();
-        state = MULTYSQRT;
+        state = MULTISECOND;
         PushOperArray(QUEUE, index, 2);
         // print(QUEUE,i);
         index = 0;
@@ -407,7 +407,7 @@ void My_state_MULTYSQRT() {
         showData(num);
     } else if (num == '/') {
         //caculate();
-        state = DIVIDE;
+        state = DIVIDESECOND;
         PushOperArray(QUEUE, index, 2);
         // print(QUEUE,i);
         index = 0;
@@ -415,12 +415,12 @@ void My_state_MULTYSQRT() {
         operator2 = num;
         showData(num);
     } else if (num == '.') {
-        state = MULTYSQRT;
+        state = MULTISECOND;
         QUEUE[index] = num;
         showData(num);
         index++;
     } else if (num == '~') {
-        state = MULTYSQRT;
+        state = MULTISECOND;
         QUEUE[index] = num;
         showData(num);
         index++;
@@ -459,9 +459,9 @@ void My_state_MULTYSQRT() {
     }
 }
 
-void My_state_DIVIDE() {
+void My_state_DIVIDESECOND() {
     if ((num >= '0' && num <= '9') && (index < MAX_LEN)) {
-        state = DIVIDE;
+        state = DIVIDESECOND;
         QUEUE[index] = num;
         showData(num);
         index++;
@@ -476,7 +476,7 @@ void My_state_DIVIDE() {
         showData(num);
     } else if (num == '*') {
         //caculate();
-        state = MULTYSQRT;
+        state = MULTISECOND;
         PushOperArray(QUEUE, index, 2);
         // print(QUEUE,i);
         index = 0;
@@ -484,19 +484,19 @@ void My_state_DIVIDE() {
         operator2 = num;
         showData(num);
     } else if (num == '/') {
-        state = DIVIDE;
+        state = DIVIDESECOND;
         PushOperArray(QUEUE, index, 2);
         index = 0;
         lastCaculate();
         operator2 = num;
         showData(num);
     } else if (num == '.') {
-        state = DIVIDE;
+        state = DIVIDESECOND;
         QUEUE[index] = num;
         showData(num);
         index++;
     } else if (num == '~') {
-        state = DIVIDE;
+        state = DIVIDESECOND;
         QUEUE[index] = num;
         showData(num);
         index++;
@@ -565,10 +565,10 @@ state_func states[TOTAL_STATE]={
     My_state_INIT,
     My_state_CORE,
     My_state_ADDMINS,
-    My_state_MULTY,
-    My_state_DIVIDESQRT,
-    My_state_MULTYSQRT,
-    My_state_DIVIDE,
+    My_state_MULTIFIRST,
+    My_state_DIVIDEFIRST,
+    My_state_MULTISECOND,
+    My_state_DIVIDESECOND,
     My_state_DONE
 };
 #endif //AUTOMACHINEGENERATOR_CALCULATOR_H

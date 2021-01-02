@@ -1,4 +1,4 @@
-C51 COMPILER V7.10   LED                                                                   01/02/2021 13:31:18 PAGE 1   
+C51 COMPILER V7.10   LED                                                                   01/02/2021 13:43:35 PAGE 1   
 
 
 C51 COMPILER V7.10, COMPILATION OF MODULE LED
@@ -62,7 +62,7 @@ line level    source
   53   2              bef = num;
   54   2              scanf2(&num);
   55   2              stateChange();
-C51 COMPILER V7.10   LED                                                                   01/02/2021 13:31:18 PAGE 2   
+C51 COMPILER V7.10   LED                                                                   01/02/2021 13:43:35 PAGE 2   
 
   56   2          }
   57   1      }
@@ -126,7 +126,7 @@ line level    source
  115   4                      break;
  116   4                  }
  117   3              }
-C51 COMPILER V7.10   LED                                                                   01/02/2021 13:31:18 PAGE 3   
+C51 COMPILER V7.10   LED                                                                   01/02/2021 13:43:35 PAGE 3   
 
  118   2      
  119   2          }
@@ -190,7 +190,7 @@ line level    source
  177   2          }
  178   1          P0 = dat;
  179   1          RS = 1;
-C51 COMPILER V7.10   LED                                                                   01/02/2021 13:31:18 PAGE 4   
+C51 COMPILER V7.10   LED                                                                   01/02/2021 13:43:35 PAGE 4   
 
  180   1          RW = 0;
  181   1          EN = 1;
@@ -254,7 +254,7 @@ line level    source
  239          
  240          void lastCaculate() {
  241   1          double num1, num2, ans;
-C51 COMPILER V7.10   LED                                                                   01/02/2021 13:31:18 PAGE 5   
+C51 COMPILER V7.10   LED                                                                   01/02/2021 13:43:35 PAGE 5   
 
  242   1          unsigned char op;
  243   1          char str[] = "ERROR";
@@ -318,7 +318,7 @@ line level    source
  301   1      }
 
 
-C51 COMPILER V7.10   LED                                                                   01/02/2021 13:31:18 PAGE 6   
+C51 COMPILER V7.10   LED                                                                   01/02/2021 13:43:35 PAGE 6   
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
    CODE SIZE        =   4734    ----
