@@ -1,0 +1,897 @@
+C51 COMPILER V7.10   LED                                                                   01/01/2021 09:27:36 PAGE 1   
+
+
+C51 COMPILER V7.10, COMPILATION OF MODULE LED
+OBJECT MODULE PLACED IN led.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE led.c LARGE BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include <reg51.h>
+   2          #include "stdio.h"
+   3          #include <intrins.h>
+   4          #include <math.h>
+   5          
+   6          #define uchar unsigned char
+   7          #define uint unsigned int
+   8          #define  MAX_LEN 16
+   9          sbit EN = P2 ^7;
+  10          sbit RS = P2 ^6;
+  11          sbit RW = P2 ^5;
+  12          
+  13          sbit K1 = P1 ^0;
+  14          sbit K2 = P1 ^1;
+  15          sbit K3 = P1 ^2;
+  16          sbit K4 = P1 ^3;
+  17          sbit K5 = P1 ^4;
+  18          sbit K6 = P1 ^5;
+  19          sbit K7 = P1 ^6;
+  20          sbit K8 = P1 ^7;
+  21          sbit BEEP = P2 ^5;
+  22          
+  23          uchar KEY_CODE[] = {
+  24                  0xee, 0xde, 0xbe, 0x7e,
+  25                  0xed, 0xdd, 0xbd, 0x7d,
+  26                  0xeb, 0xdb, 0xbb, 0x7b,
+  27                  0xe7, 0xd7, 0xb7, 0x77
+  28          };
+  29          
+  30          uchar *ops = "123+456-789*.0=/";
+  31          
+  32          /**
+  33          1 2 3 +
+  34          4 5 6 -
+  35          7 8 9 *
+  36          . 0 = /
+  37          
+  38          ( ) ~ c
+  39          */
+  40          
+  41          uchar index = 0;
+  42          uchar num = 0xff;
+  43          uchar bef = 0xff;
+  44          //      uchar start=0;
+  45          
+  46          typedef enum CAL_STATE {
+  47              ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, TOTAL_STATE
+  48          } CAL_STATE;
+  49          CAL_STATE state = ONE;
+  50          unsigned char operator1, operator2;
+  51          unsigned char operator3, operator4;
+  52          double operand[3];
+  53          double operand1[3];
+  54          uchar QUEUE[MAX_LEN];
+  55          
+C51 COMPILER V7.10   LED                                                                   01/01/2021 09:27:36 PAGE 2   
+
+  56          void scanf2(uchar *var);
+  57          
+  58          void delay5MS();
+  59          
+  60          void delay100MS();
+  61          
+  62          void writeCMD(uchar com);
+  63          
+  64          void showData(uchar dat);
+  65          
+  66          void init();
+  67          
+  68          void clear();
+  69          
+  70          void stateChange();
+  71          
+  72          void PushOperArray(uchar *arr, int i, int locationOperand);
+  73          
+  74          void firstCaculate();
+  75          
+  76          void lastCaculate();
+  77          
+  78          void beep();
+  79          
+  80          void showAnswer();
+  81          
+  82          
+  83          void main() {
+  84   1          init();
+  85   1          while (1) {
+  86   2              bef = num;
+  87   2              scanf2(&num);
+  88   2              stateChange();
+  89   2          }
+  90   1      }
+  91          
+  92          typedef void(*state_func)();
+  93          
+  94          
+  95          void My_state_ONE() {
+  96   1      
+  97   1          if ((num >= '0' && num <= '9') && (index < MAX_LEN)) {
+  98   2              state = TWO;
+  99   2              QUEUE[index] = num;
+ 100   2              showData(num);
+ 101   2              index++;
+ 102   2          } else if (num == '(') {
+ 103   2              operator3 = operator1;
+ 104   2              operator4 = operator2;
+ 105   2              operand1[0] = operand[0];
+ 106   2              operand1[1] = operand[1];
+ 107   2              operand1[2] = operand[2];
+ 108   2              state = EIGHT;
+ 109   2              showData(num);
+ 110   2          } else if (num == '~') {
+ 111   2              state = EIGHT;
+ 112   2              QUEUE[index] = num;
+ 113   2              showData(num);
+ 114   2              index++;
+ 115   2          } else if (num == '.') {
+ 116   2              state = TWO;
+ 117   2              QUEUE[index] = num;
+C51 COMPILER V7.10   LED                                                                   01/01/2021 09:27:36 PAGE 3   
+
+ 118   2              showData(num);
+ 119   2              index++;
+ 120   2          } else {
+ 121   2              beep();
+ 122   2          }
+ 123   1      }
+ 124          
+ 125          void My_state_TWO() {
+ 126   1          if ((num >= '0' && num <= '9') && (index < MAX_LEN)) {
+ 127   2      
+ 128   2              state = TWO;
+ 129   2              QUEUE[index] = num;
+ 130   2              showData(num);
+ 131   2              index++;
+ 132   2          } else if (num == '+' || num == '-') {
+ 133   2              state = THREE;
+ 134   2              PushOperArray(QUEUE, index, 0);
+ 135   2              //print(QUEUE,i);
+ 136   2              index = 0;
+ 137   2      
+ 138   2              operator1 = num;
+ 139   2              showData(num);
+ 140   2          } else if (num == '*') {
+ 141   2              state = FOUR;
+ 142   2              PushOperArray(QUEUE, index, 0);
+ 143   2              //print(QUEUE,i);
+ 144   2              index = 0;
+ 145   2              operator1 = num;
+ 146   2              showData(num);
+ 147   2          } else if (num == '/') {
+ 148   2              state = FIVE;
+ 149   2              PushOperArray(QUEUE, index, 0);
+ 150   2              //print(QUEUE,i);
+ 151   2              index = 0;
+ 152   2              operator1 = num;
+ 153   2              showData(num);
+ 154   2          } else if (num == '.') {
+ 155   2              state = TWO;
+ 156   2              QUEUE[index] = num;
+ 157   2              showData(num);
+ 158   2              index++;
+ 159   2          } else if (num == '=') {
+ 160   2              state = ONE;
+ 161   2              PushOperArray(QUEUE, index, 0);
+ 162   2              index = 0;
+ 163   2              showData(num);
+ 164   2              showAnswer();
+ 165   2              //clear();
+ 166   2          }
+ 167   1              /*else if(num == '(')
+ 168   1              {
+ 169   1               operator3=operator1; //锟斤拷锟斤拷锟斤拷锟捷匡拷始
+ 170   1               operator4=operator2;
+ 171   1               operand1[0]=operand[0];
+ 172   1               operand1[1]=operand[1];
+ 173   1               operand1[2]=operand[2];//锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷桑锟斤拷锟斤拷?)锟�
+             -��碉拷锟斤拷锟斤拷
+ 174   1               state = ONE;
+ 175   1              }*/
+ 176   1          else {
+ 177   2              beep();
+ 178   2          }
+C51 COMPILER V7.10   LED                                                                   01/01/2021 09:27:36 PAGE 4   
+
+ 179   1      }
+ 180          
+ 181          void My_state_THREE() {
+ 182   1          if ((num >= '0' && num <= '9') && (index < MAX_LEN))    //A+B
+ 183   1          {
+ 184   2              state = THREE;
+ 185   2              QUEUE[index] = num;
+ 186   2              showData(num);
+ 187   2              index++;
+ 188   2          } else if (num == '+' || num == '-') {       //A+B+
+ 189   2              //caculate();
+ 190   2              state = THREE;
+ 191   2              PushOperArray(QUEUE, index, 1);
+ 192   2              index = 0;
+ 193   2              firstCaculate();
+ 194   2              operator1 = num;
+ 195   2              showData(num);
+ 196   2      
+ 197   2      
+ 198   2          } else if (num == '*')  //A+B*
+ 199   1          {
+ 200   2              state = SIX;
+ 201   2              PushOperArray(QUEUE, index, 1);
+ 202   2              // print(QUEUE,i);
+ 203   2              index = 0;
+ 204   2              //firstCaculate();
+ 205   2              operator2 = num;
+ 206   2              showData(num);
+ 207   2          } else if (num == '/')  //  A+B/
+ 208   1          {
+ 209   2              state = SEVEN;
+ 210   2              PushOperArray(QUEUE, index, 1);
+ 211   2              //print(QUEUE,i);
+ 212   2              index = 0;
+ 213   2              // firstCaculate();
+ 214   2              operator2 = num;
+ 215   2              showData(num);
+ 216   2          } else if (num == '.') {
+ 217   2              state = THREE;
+ 218   2              QUEUE[index] = num;
+ 219   2              showData(num);
+ 220   2              index++;
+ 221   2          } else if (num == '~') {
+ 222   2              state = THREE;
+ 223   2              QUEUE[index] = num;
+ 224   2              showData(num);
+ 225   2              index++;
+ 226   2          } else if (num == '=') {
+ 227   2              state = ONE;
+ 228   2              PushOperArray(QUEUE, index, 1);
+ 229   2              index = 0;
+ 230   2              showData(num);
+ 231   2              firstCaculate();
+ 232   2              showAnswer();
+ 233   2              //clear();
+ 234   2          } else if (num == '(') {
+ 235   2              operator3 = operator1;
+ 236   2              operator4 = operator2;
+ 237   2              operand1[0] = operand[0];
+ 238   2              operand1[1] = operand[1];
+ 239   2              operand1[2] = operand[2];
+ 240   2              state = EIGHT;
+C51 COMPILER V7.10   LED                                                                   01/01/2021 09:27:36 PAGE 5   
+
+ 241   2              showData(num);
+ 242   2          } else if (num == ')') {
+ 243   2              state = THREE;
+ 244   2              PushOperArray(QUEUE, index, 1);
+ 245   2              index = 0;
+ 246   2              firstCaculate();
+ 247   2              operand1[1] = operand[0];
+ 248   2              operand[0] = operand1[0];
+ 249   2              operand[1] = operand1[1];
+ 250   2              operand[2] = operand1[2];
+ 251   2              operator1 = operator3;
+ 252   2              operator2 = operator4;
+ 253   2              showData(num);
+ 254   2          } else {
+ 255   2              beep();
+ 256   2          }
+ 257   1      }
+ 258          
+ 259          
+ 260          void My_state_FOUR() {
+ 261   1          if ((num >= '0' && num <= '9') && (index < MAX_LEN))      //A*B
+ 262   1          {
+ 263   2              state = FOUR;
+ 264   2              QUEUE[index] = num;
+ 265   2              showData(num);
+ 266   2              index++;
+ 267   2          } else if (num == '+' || num == '-') {      //A*B+ --> A+
+ 268   2              //caculate();
+ 269   2              state = THREE;
+ 270   2              PushOperArray(QUEUE, index, 1);
+ 271   2              index = 0;
+ 272   2              firstCaculate();
+ 273   2              operator1 = num;
+ 274   2              showData(num);
+ 275   2          } else if (num == '*') {
+ 276   2              // caculate();
+ 277   2              state = FOUR;
+ 278   2              PushOperArray(QUEUE, index, 1);
+ 279   2              // print(QUEUE,i);
+ 280   2              index = 0;
+ 281   2              firstCaculate();
+ 282   2              operator1 = num;
+ 283   2              showData(num);
+ 284   2          } else if (num == '/') {
+ 285   2              //caculate();
+ 286   2              state = FIVE;
+ 287   2              PushOperArray(QUEUE, index, 1);
+ 288   2              // print(QUEUE,i);
+ 289   2              index = 0;
+ 290   2              firstCaculate();
+ 291   2              operator1 = num;
+ 292   2              showData(num);
+ 293   2          } else if (num == '.') {
+ 294   2              state = FOUR;
+ 295   2              QUEUE[index] = num;
+ 296   2              showData(num);
+ 297   2              index++;
+ 298   2          } else if (num == '~') {
+ 299   2              state = FOUR;
+ 300   2              QUEUE[index] = num;
+ 301   2              showData(num);
+ 302   2              index++;
+C51 COMPILER V7.10   LED                                                                   01/01/2021 09:27:36 PAGE 6   
+
+ 303   2          } else if (num == '=') {
+ 304   2              state = ONE;
+ 305   2              PushOperArray(QUEUE, index, 1);
+ 306   2              index = 0;
+ 307   2              showData(num);
+ 308   2              firstCaculate();
+ 309   2              showAnswer();
+ 310   2              //clear();
+ 311   2          } else if (num == '(') {
+ 312   2              operator3 = operator1;
+ 313   2              operator4 = operator2;
+ 314   2              operand1[0] = operand[0];
+ 315   2              operand1[1] = operand[1];
+ 316   2              operand1[2] = operand[2];
+ 317   2              state = EIGHT;
+ 318   2              showData(num);
+ 319   2          } else if (num == ')') {
+ 320   2              state = THREE;
+ 321   2              PushOperArray(QUEUE, index, 1);
+ 322   2              index = 0;
+ 323   2              firstCaculate();
+ 324   2              operand1[1] = operand[0];
+ 325   2              operand[0] = operand1[0];
+ 326   2              operand[1] = operand1[1];
+ 327   2              operand[2] = operand1[2];
+ 328   2              operator1 = operator3;
+ 329   2              operator2 = operator4;
+ 330   2              showData(num);
+ 331   2          } else {
+ 332   2              beep();
+ 333   2          }
+ 334   1      }
+ 335          
+ 336          void My_state_FIVE() {
+ 337   1          if ((num >= '0' && num <= '9') && (index < MAX_LEN)) {
+ 338   2              state = FIVE;
+ 339   2              QUEUE[index] = num;
+ 340   2              showData(num);
+ 341   2              index++;
+ 342   2          } else if (num == '+' || num == '-') {
+ 343   2              // caculate();
+ 344   2              state = THREE;
+ 345   2              PushOperArray(QUEUE, index, 1);
+ 346   2              //print(QUEUE,i);
+ 347   2              index = 0;
+ 348   2              firstCaculate();
+ 349   2              operator1 = num;
+ 350   2              showData(num);
+ 351   2          } else if (num == '*') {
+ 352   2              //caculate();
+ 353   2              state = FOUR;
+ 354   2              PushOperArray(QUEUE, index, 1);
+ 355   2              // print(QUEUE,i);
+ 356   2              index = 0;
+ 357   2              firstCaculate();
+ 358   2              operator1 = num;
+ 359   2              showData(num);
+ 360   2          } else if (num == '/') {
+ 361   2              //caculate();
+ 362   2              state = FIVE;
+ 363   2              PushOperArray(QUEUE, index, 1);
+ 364   2              // print(QUEUE,i);
+C51 COMPILER V7.10   LED                                                                   01/01/2021 09:27:36 PAGE 7   
+
+ 365   2              index = 0;
+ 366   2              firstCaculate();
+ 367   2              operator1 = num;
+ 368   2              showData(num);
+ 369   2          } else if (num == '.') {
+ 370   2              state = FIVE;
+ 371   2              QUEUE[index] = num;
+ 372   2              showData(num);
+ 373   2              index++;
+ 374   2          } else if (num == '~') {
+ 375   2              state = FIVE;
+ 376   2              QUEUE[index] = num;
+ 377   2              showData(num);
+ 378   2              index++;
+ 379   2          } else if (num == '=')    //A/B = A?
+ 380   1          {
+ 381   2              state = ONE;
+ 382   2              PushOperArray(QUEUE, index, 1);
+ 383   2              index = 0;
+ 384   2              showData(num);
+ 385   2              firstCaculate();
+ 386   2              showAnswer();
+ 387   2              //clear();
+ 388   2          } else if (num == '(') {
+ 389   2              operator3 = operator1;
+ 390   2              operator4 = operator2;
+ 391   2              operand1[0] = operand[0];
+ 392   2              operand1[1] = operand[1];
+ 393   2              operand1[2] = operand[2];
+ 394   2              state = EIGHT;
+ 395   2              showData(num);
+ 396   2          } else if (num == ')') {
+ 397   2              state = THREE;
+ 398   2              PushOperArray(QUEUE, index, 1);
+ 399   2              index = 0;
+ 400   2              firstCaculate();
+ 401   2              operand1[1] = operand[0];
+ 402   2              operand[0] = operand1[0];
+ 403   2              operand[1] = operand1[1];
+ 404   2              operand[2] = operand1[2];
+ 405   2              operator1 = operator3;
+ 406   2              operator2 = operator4;
+ 407   2              showData(num);
+ 408   2          } else {
+ 409   2              beep();
+ 410   2          }
+ 411   1      }
+ 412          
+ 413          void My_state_SIX() {
+ 414   1      
+ 415   1          if ((num >= '0' && num <= '9') && (index < MAX_LEN)) {
+ 416   2              state = SIX;
+ 417   2              QUEUE[index] = num;
+ 418   2              showData(num);
+ 419   2              index++;
+ 420   2          } else if (num == '+' || num == '-') {
+ 421   2              // caculate();
+ 422   2              // caculate();
+ 423   2              state = THREE;
+ 424   2              PushOperArray(QUEUE, index, 2);
+ 425   2              //print(QUEUE,i);
+ 426   2              index = 0;
+C51 COMPILER V7.10   LED                                                                   01/01/2021 09:27:36 PAGE 8   
+
+ 427   2              lastCaculate();
+ 428   2              firstCaculate();
+ 429   2              operator1 = num;
+ 430   2              showData(num);
+ 431   2      
+ 432   2          } else if (num == '*') {
+ 433   2              //caculate();
+ 434   2              state = SIX;
+ 435   2              PushOperArray(QUEUE, index, 2);
+ 436   2              // print(QUEUE,i);
+ 437   2              index = 0;
+ 438   2              lastCaculate();
+ 439   2              operator2 = num;
+ 440   2              showData(num);
+ 441   2          } else if (num == '/') {
+ 442   2              //caculate();
+ 443   2              state = SEVEN;
+ 444   2              PushOperArray(QUEUE, index, 2);
+ 445   2              // print(QUEUE,i);
+ 446   2              index = 0;
+ 447   2              lastCaculate();
+ 448   2              operator2 = num;
+ 449   2              showData(num);
+ 450   2          } else if (num == '.') {
+ 451   2              state = SIX;
+ 452   2              QUEUE[index] = num;
+ 453   2              showData(num);
+ 454   2              index++;
+ 455   2          } else if (num == '~') {
+ 456   2              state = SIX;
+ 457   2              QUEUE[index] = num;
+ 458   2              showData(num);
+ 459   2              index++;
+ 460   2          } else if (num == '=') {
+ 461   2              state = ONE;
+ 462   2              PushOperArray(QUEUE, index, 2);
+ 463   2              index = 0;
+ 464   2              showData(num);
+ 465   2              lastCaculate();
+ 466   2              firstCaculate();
+ 467   2              showAnswer();
+ 468   2              // clear();
+ 469   2          } else if (num == '(') {
+ 470   2              operator3 = operator1;
+ 471   2              operator4 = operator2;
+ 472   2              operand1[0] = operand[0];
+ 473   2              operand1[1] = operand[1];
+ 474   2              operand1[2] = operand[2];
+ 475   2              state = EIGHT;
+ 476   2              showData(num);
+ 477   2          } else if (num == ')') {
+ 478   2              state = THREE;
+ 479   2              PushOperArray(QUEUE, index, 1);
+ 480   2              index = 0;
+ 481   2              lastCaculate();
+ 482   2              firstCaculate();
+ 483   2              operand1[2] = operand[0];
+ 484   2              operand[0] = operand1[0];
+ 485   2              operand[1] = operand1[1];
+ 486   2              operand[2] = operand1[2];
+ 487   2              operator1 = operator3;
+ 488   2              operator2 = operator4;
+C51 COMPILER V7.10   LED                                                                   01/01/2021 09:27:36 PAGE 9   
+
+ 489   2              showData(num);
+ 490   2          } else {
+ 491   2              beep();
+ 492   2          }
+ 493   1      }
+ 494          
+ 495          void My_state_SEVEN() {
+ 496   1          if ((num >= '0' && num <= '9') && (index < MAX_LEN)) {
+ 497   2              state = SEVEN;
+ 498   2              QUEUE[index] = num;
+ 499   2              showData(num);
+ 500   2              index++;
+ 501   2          } else if (num == '+' || num == '-') {
+ 502   2              state = THREE;
+ 503   2              PushOperArray(QUEUE, index, 2);
+ 504   2              // print(QUEUE,i);
+ 505   2              index = 0;
+ 506   2              lastCaculate();
+ 507   2              firstCaculate();
+ 508   2              operator1 = num;
+ 509   2              showData(num);
+ 510   2          } else if (num == '*') {
+ 511   2              //caculate();
+ 512   2              state = SIX;
+ 513   2              PushOperArray(QUEUE, index, 2);
+ 514   2              // print(QUEUE,i);
+ 515   2              index = 0;
+ 516   2              lastCaculate();
+ 517   2              operator2 = num;
+ 518   2              showData(num);
+ 519   2          } else if (num == '/') {
+ 520   2              state = SEVEN;
+ 521   2              PushOperArray(QUEUE, index, 2);
+ 522   2              index = 0;
+ 523   2              lastCaculate();
+ 524   2              operator2 = num;
+ 525   2              showData(num);
+ 526   2          } else if (num == '.') {
+ 527   2              state = SEVEN;
+ 528   2              QUEUE[index] = num;
+ 529   2              showData(num);
+ 530   2              index++;
+ 531   2          } else if (num == '~') {
+ 532   2              state = SEVEN;
+ 533   2              QUEUE[index] = num;
+ 534   2              showData(num);
+ 535   2              index++;
+ 536   2          } else if (num == '=') {
+ 537   2              state = ONE;
+ 538   2              PushOperArray(QUEUE, index, 2);
+ 539   2              index = 0;
+ 540   2              showData(num);
+ 541   2              lastCaculate();
+ 542   2              firstCaculate();
+ 543   2              showAnswer();
+ 544   2              // clear();
+ 545   2          } else if (num == '(') {
+ 546   2              operator3 = operator1;
+ 547   2              operator4 = operator2;
+ 548   2              operand1[0] = operand[0];
+ 549   2              operand1[1] = operand[1];
+ 550   2              operand1[2] = operand[2];
+C51 COMPILER V7.10   LED                                                                   01/01/2021 09:27:36 PAGE 10  
+
+ 551   2              state = EIGHT;
+ 552   2              showData(num);
+ 553   2          } else if (num == ')') {
+ 554   2              state = THREE;
+ 555   2              PushOperArray(QUEUE, index, 1);
+ 556   2              index = 0;
+ 557   2              lastCaculate();
+ 558   2              firstCaculate();
+ 559   2              operand1[2] = operand[0];
+ 560   2              operand[0] = operand1[0];
+ 561   2              operand[1] = operand1[1];
+ 562   2              operand[2] = operand1[2];
+ 563   2              operator1 = operator3;
+ 564   2              operator2 = operator4;
+ 565   2              showData(num);
+ 566   2          } else {
+ 567   2              beep();
+ 568   2          }
+ 569   1      }
+ 570          
+ 571          
+ 572          void My_state_EIGHT() {
+ 573   1          if ((num >= '0' && num <= '9') && (index < MAX_LEN)) {
+ 574   2              state = TWO;
+ 575   2              QUEUE[index] = num;
+ 576   2              showData(num);
+ 577   2              index++;
+ 578   2          } else if (num == '(') {
+ 579   2              operator3 = operator1;
+ 580   2              operator4 = operator2;
+ 581   2              operand1[0] = operand[0];
+ 582   2              operand1[1] = operand[1];
+ 583   2              operand1[2] = operand[2];
+ 584   2              state = EIGHT;
+ 585   2              showData(num);
+ 586   2          } else if (num == '~') {
+ 587   2              state = EIGHT;
+ 588   2              QUEUE[index] = num;
+ 589   2              showData(num);
+ 590   2              index++;
+ 591   2          } else {
+ 592   2              beep();
+ 593   2          }
+ 594   1      }
+ 595          
+ 596          state_func states[TOTAL_STATE]={
+ 597              My_state_ONE,
+ 598              My_state_TWO,
+ 599              My_state_THREE,
+ 600              My_state_FOUR,
+ 601              My_state_FIVE,
+ 602              My_state_SIX,
+ 603              My_state_SEVEN,
+ 604              My_state_EIGHT
+ 605          };
+ 606          void stateChange() {
+ 607   1          states[state]();
+ 608   1      }
+ 609          
+ 610          void scanf2(uchar *var) {
+ 611   1          uchar temp;
+ 612   1          int q = 1;
+C51 COMPILER V7.10   LED                                                                   01/01/2021 09:27:36 PAGE 11  
+
+ 613   1          temp = q;
+ 614   1          q = 0;
+ 615   1          while (1) {
+ 616   2              P3 = 0xff;
+ 617   2              if (K1 == 0) {
+ 618   3                  delay100MS();
+ 619   3                  if (K1 == 0) {
+ 620   4                      while (!K1);
+ 621   4                      *var = '(';
+ 622   4                      break;
+ 623   4                  }
+ 624   3              }
+ 625   2              if (K2 == 0) {
+ 626   3                  delay100MS();
+ 627   3                  if (K2 == 0) {
+ 628   4                      while (!K2);
+ 629   4                      *var = ')';
+ 630   4                      break;
+ 631   4                  }
+ 632   3              }
+ 633   2              if (K3 == 0) {
+ 634   3                  delay100MS();
+ 635   3                  if (K3 == 0) {
+ 636   4                      while (!K3);
+ 637   4                      *var = '~';
+ 638   4                      break;
+ 639   4                  }
+ 640   3              }
+ 641   2              if (K4 == 0) {
+ 642   3                  delay100MS();
+ 643   3                  if (K4 == 0) {
+ 644   4                      while (!K4);
+ 645   4                      clear();
+ 646   4                      state = ONE;
+ 647   4                      index = 0;
+ 648   4                      num = '+';
+ 649   4                      break;
+ 650   4                  }
+ 651   3              }
+ 652   2      
+ 653   2              P3 = 0x0f;
+ 654   2              if (P3 != 0x0f) {
+ 655   3                  delay100MS();
+ 656   3                  temp = P3;
+ 657   3                  P3 = 0xf0;
+ 658   3                  if (P3 != 0xf0) {
+ 659   4                      num = temp | P3;
+ 660   4                      for (q = 0; q < 16; q++) if (num == KEY_CODE[q]) *var = ops[q];
+ 661   4                      break;
+ 662   4                  }
+ 663   3              }
+ 664   2      
+ 665   2          }
+ 666   1          if (state == ONE) clear();
+ 667   1      }
+ 668          
+ 669          void PushOperArray(uchar *arr, int i, int locationOperand) {
+ 670   1          if (bef != ')') {
+ 671   2              int n = 0;
+ 672   2              double total = 0;
+ 673   2              uchar j = 0;
+ 674   2              if (arr[0] == '~') {
+C51 COMPILER V7.10   LED                                                                   01/01/2021 09:27:36 PAGE 12  
+
+ 675   3                  for (j = 1; j < i; j++) {
+ 676   4                      if (arr[j] == 0x2e)
+ 677   4                          n = i - j - 1;
+ 678   4                      else total = total * 10 + (arr[j] - 0x30);
+ 679   4                  }
+ 680   3                  for (; n > 0; n--)
+ 681   3                      total /= 10;
+ 682   3                  operand[locationOperand] = sqrt(total);
+ 683   3              } else {
+ 684   3                  for (j = 0; j < i; j++) {
+ 685   4                      if (arr[j] == 0x2e)
+ 686   4                          n = i - j - 1;
+ 687   4                      else total = total * 10 + (arr[j] - 0x30);
+ 688   4                  }
+ 689   3                  for (; n > 0; n--)
+ 690   3                      total /= 10;
+ 691   3                  operand[locationOperand] = total;
+ 692   3              }
+ 693   2      
+ 694   2          }
+ 695   1      }
+ 696          
+ 697          void delay5MS() {
+ 698   1          int n = 3000;
+ 699   1          while (n--);
+ 700   1      }
+ 701          
+ 702          void delay100MS() {
+ 703   1          uint n = 8000;
+ 704   1          while (n--);
+ 705   1      }
+ 706          
+ 707          void writeCMD(uchar com) {
+ 708   1          P0 = com;
+ 709   1          RS = 0;
+ 710   1          RW = 0;
+ 711   1          delay5MS();
+ 712   1          EN = 1;
+ 713   1          delay5MS();
+ 714   1          EN = 0;
+ 715   1      }
+ 716          
+ 717          void showData(uchar dat) {
+ 718   1          // EN = 1;
+ 719   1          RW = 1;
+ 720   1          RS = 0;
+ 721   1          if (P0 == 0x11) {
+ 722   2              writeCMD(0xC0);
+ 723   2          }
+ 724   1          P0 = dat;
+ 725   1          RS = 1;
+ 726   1          RW = 0;
+ 727   1          EN = 1;
+ 728   1          delay5MS();
+ 729   1          EN = 0;
+ 730   1      }
+ 731          
+ 732          void init() {
+ 733   1          EN = 0;
+ 734   1          writeCMD(0x38);
+ 735   1          writeCMD(0x0e);
+ 736   1          writeCMD(0x06);
+C51 COMPILER V7.10   LED                                                                   01/01/2021 09:27:36 PAGE 13  
+
+ 737   1          writeCMD(0x01);
+ 738   1          writeCMD(0x80);
+ 739   1      }
+ 740          
+ 741          void clear() {
+ 742   1          EN = 0;
+ 743   1          writeCMD(0x01);
+ 744   1      }
+ 745          
+ 746          void firstCaculate() {
+ 747   1          double num1, num2, ans;
+ 748   1          char str[] = "ERROR";
+ 749   1          int m = 0;
+ 750   1          unsigned char op;
+ 751   1          num1 = operand[0];
+ 752   1          num2 = operand[1];
+ 753   1          op = operator1;
+ 754   1          switch (op) {
+ 755   2              case '+':
+ 756   2                  ans = num1 + num2;
+ 757   2                  break;
+ 758   2              case '-':
+ 759   2                  ans = num1 - num2;
+ 760   2                  break;
+ 761   2              case '*':
+ 762   2                  ans = num1 * num2;
+ 763   2                  break;
+ 764   2              case '/':
+ 765   2                  if (operand[1] != 0) {
+ 766   3                      ans = num1 / num2;
+ 767   3                  } else {
+ 768   3                      delay5MS();
+ 769   3                      clear();
+ 770   3                      while (1) {
+ 771   4                          if (str[m] == '\0')
+ 772   4                              break;
+ 773   4                          else {
+ 774   5                              showData(str[m]);
+ 775   5                              m++;
+ 776   5                          }
+ 777   4                      }
+ 778   3                      state = ONE;
+ 779   3                  }
+ 780   2                  break;
+ 781   2          }
+ 782   1      
+ 783   1          operand[0] = ans;
+ 784   1      }
+ 785          
+ 786          void lastCaculate() {
+ 787   1          double num1, num2, ans;
+ 788   1          unsigned char op;
+ 789   1          char str[] = "ERROR";
+ 790   1          int m = 0;
+ 791   1          num1 = operand[1];
+ 792   1          num2 = operand[2];
+ 793   1          op = operator2;
+ 794   1          switch (op) {
+ 795   2              case '+':
+ 796   2                  ans = num1 + num2;
+ 797   2                  break;
+ 798   2              case '-':
+C51 COMPILER V7.10   LED                                                                   01/01/2021 09:27:36 PAGE 14  
+
+ 799   2                  ans = num1 - num2;
+ 800   2                  break;
+ 801   2              case '*':
+ 802   2                  ans = num1 * num2;
+ 803   2                  break;
+ 804   2              case '/':
+ 805   2                  if (operand[2] != 0) {
+ 806   3                      ans = num1 / num2;
+ 807   3                  } else {
+ 808   3                      delay5MS();
+ 809   3                      clear();
+ 810   3                      while (1) {
+ 811   4                          if (str[m] == '\0')
+ 812   4                              break;
+ 813   4                          else {
+ 814   5                              showData(str[m]);
+ 815   5                              m++;
+ 816   5                          }
+ 817   4                      }
+ 818   3                      state = ONE;
+ 819   3                  }
+ 820   2                  break;
+ 821   2          }
+ 822   1          operand[1] = ans;
+ 823   1      }
+ 824          
+ 825          
+ 826          void showAnswer() {
+ 827   1          double ans = operand[0];
+ 828   1          char str[MAX_LEN * 2];
+ 829   1          uchar m;
+ 830   1          sprintf(str, "%g", ans);
+ 831   1          m = 0;
+ 832   1          while (str[m++]);
+ 833   1          writeCMD(0x4f + 0x80);
+ 834   1          writeCMD(0x04);
+ 835   1          --m;
+ 836   1          while (m--) showData(str[m]);
+ 837   1      }
+ 838          
+ 839          void beep() {
+ 840   1          unsigned char q, j;
+ 841   1          for (q = 0; q < 100; q++) {
+ 842   2              BEEP = !BEEP;
+ 843   2              for (j = 0; j < 250; j++)
+ 844   2                  _nop_();
+ 845   2          }
+ 846   1          BEEP = 1;
+ 847   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =   4734    ----
+   CONSTANT SIZE    =     32    ----
+   XDATA SIZE       =     91      92
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
