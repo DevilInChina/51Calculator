@@ -5,4 +5,4 @@ SET(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR})
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(AutoMachineGenerator main.cpp)
+add_executable(AutoMachineGenerator main.cpp Cal/calculator.h)
