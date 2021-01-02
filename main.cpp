@@ -62,9 +62,28 @@ string modify(const string &a){
     }
     return ret;
 }
-void addPath(const string &str1,const string & con,const string &str2){
+void MODIFY(string &a){
+    replace(a.begin(),a.end(),'(',' ');
+    replace(a.begin(),a.end(),')',' ');
+    replace(a.begin(),a.end(),'~','q');
+    replace(a.begin(),a.end(),'|','o');
 
-    printf("%s-->|%s|%s\n",str1.c_str(),con.c_str(),str2.c_str());
+}
+int fromLen;
+void addPath(const string &str1,const string & con,const string &str2){
+    string from;
+    stringstream frombuf(str1);
+    frombuf>>from;
+    frombuf>>from;
+    from = string(from.begin()+fromLen-1,from.end()-2);
+    string cons(con);
+    MODIFY(cons);
+    int beg = 0;
+    int ends = cons.length()-1;
+    while (isblank(cons[beg++]));
+
+    cons = string(cons.begin()+beg-1,cons.end()+ends);
+    printf("%s-->|%s|%s\n",from.c_str(),cons.c_str(),str2.c_str());
 }
 
 int main(int argc,char **argv) {
@@ -90,49 +109,49 @@ int main(int argc,char **argv) {
     }
     vector<string>header;
     stringstream s(buf);
-
+    fromLen = info[0].length();
     string temp;
     string last;
-    while (getline(s,temp)){
+    cout << "```mermaid"<<endl<<
+            "graph LR;"<<endl;
+    while (getline(s,temp)) {
         if(temp.empty())continue;
-        int cnt = count(temp.begin(),temp.end(),'{');
+        //cout<<temp<<endl;
+        auto left = find(temp.begin(), temp.end(), '{');
+        auto right = find(temp.begin(), temp.end(), '}');
+        if(left == right){/// both are end
+            stringstream ss(temp);
+            string cur;
+            ss>>cur;
+            if(cur==info[1]){
+                ss>>cur;
+                ss>>cur;
+                addPath(header[0],header.back(),cur);
 
-        stringstream ss(temp);
-        string beginner;
-        ss >> beginner;
-        if(cnt) {
-            {
-                if (beginner[0] == '{'){
-                    header.emplace_back("[[]]");
-                }
-                else {
-                    auto it = find(temp.begin(), temp.end(), '{');
-                    header.emplace_back(string(temp.begin(), it));
-                }
             }
-        }else{
-            /*
-             state = 123
-             */
-            if(beginner==info[1]){
-                ss>>beginner;
-                ss>>beginner;
 
-                addPath(header[0],header.back(),beginner);
+        }else if(right != temp.end() && left != temp.end() && right < left){
+            header.pop_back();
+            header.emplace_back(right + 1, left);
+        }else if(right!=temp.end() && left==temp.end()) {
+            header.pop_back();
+        }else if(left!=temp.end()){
+            stringstream ss(temp);
+            string cur;
+            ss>>cur;
+            if(cur[0]=='{') {
+                if(last.back()=='\n')last.pop_back();
+                header.emplace_back(last);
             }
+            else header.emplace_back(temp.begin(),left);
         }
 
-        last = temp;
-        cnt = count(temp.begin(),temp.end(),'}');
-        if(cnt){
-            if(!header.empty()){
-                header.pop_back();
-            }else{
-                cout<<"error\n";
-            }
+        if(right != temp.end()){
+            last = string(right+1,temp.end());
+        }else{
+            last = temp;
         }
     }
-
-
+    cout<<"```\n";
     return 0;
 }
