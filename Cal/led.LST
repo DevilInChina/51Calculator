@@ -1,4 +1,4 @@
-C51 COMPILER V7.10   LED                                                                   01/02/2021 12:25:12 PAGE 1   
+C51 COMPILER V7.10   LED                                                                   01/02/2021 13:31:18 PAGE 1   
 
 
 C51 COMPILER V7.10, COMPILATION OF MODULE LED
@@ -48,7 +48,7 @@ line level    source
   39          //      uchar start=0;
   40          
   41          
-  42          CAL_STATE state = ONE;
+  42          CAL_STATE state = INIT;
   43          unsigned char operator1, operator2;
   44          unsigned char operator3, operator4;
   45          double operand[3];
@@ -62,7 +62,7 @@ line level    source
   53   2              bef = num;
   54   2              scanf2(&num);
   55   2              stateChange();
-C51 COMPILER V7.10   LED                                                                   01/02/2021 12:25:12 PAGE 2   
+C51 COMPILER V7.10   LED                                                                   01/02/2021 13:31:18 PAGE 2   
 
   56   2          }
   57   1      }
@@ -108,7 +108,7 @@ line level    source
   97   3                  if (K4 == 0) {
   98   4                      while (!K4);
   99   4                      clear();
- 100   4                      state = ONE;
+ 100   4                      state = INIT;
  101   4                      index = 0;
  102   4                      num = '+';
  103   4                      break;
@@ -126,11 +126,11 @@ line level    source
  115   4                      break;
  116   4                  }
  117   3              }
-C51 COMPILER V7.10   LED                                                                   01/02/2021 12:25:12 PAGE 3   
+C51 COMPILER V7.10   LED                                                                   01/02/2021 13:31:18 PAGE 3   
 
  118   2      
  119   2          }
- 120   1          if (state == ONE) clear();
+ 120   1          if (state == INIT) clear();
  121   1      }
  122          
  123          void PushOperArray(uchar *arr, int i, int locationOperand) {
@@ -190,7 +190,7 @@ line level    source
  177   2          }
  178   1          P0 = dat;
  179   1          RS = 1;
-C51 COMPILER V7.10   LED                                                                   01/02/2021 12:25:12 PAGE 4   
+C51 COMPILER V7.10   LED                                                                   01/02/2021 13:31:18 PAGE 4   
 
  180   1          RW = 0;
  181   1          EN = 1;
@@ -244,7 +244,7 @@ line level    source
  229   5                              m++;
  230   5                          }
  231   4                      }
- 232   3                      state = ONE;
+ 232   3                      state = INIT;
  233   3                  }
  234   2                  break;
  235   2          }
@@ -254,7 +254,7 @@ line level    source
  239          
  240          void lastCaculate() {
  241   1          double num1, num2, ans;
-C51 COMPILER V7.10   LED                                                                   01/02/2021 12:25:12 PAGE 5   
+C51 COMPILER V7.10   LED                                                                   01/02/2021 13:31:18 PAGE 5   
 
  242   1          unsigned char op;
  243   1          char str[] = "ERROR";
@@ -286,7 +286,7 @@ line level    source
  269   5                              m++;
  270   5                          }
  271   4                      }
- 272   3                      state = ONE;
+ 272   3                      state = INIT;
  273   3                  }
  274   2                  break;
  275   2          }
@@ -318,7 +318,7 @@ line level    source
  301   1      }
 
 
-C51 COMPILER V7.10   LED                                                                   01/02/2021 12:25:12 PAGE 6   
+C51 COMPILER V7.10   LED                                                                   01/02/2021 13:31:18 PAGE 6   
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
    CODE SIZE        =   4734    ----

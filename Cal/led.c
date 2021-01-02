@@ -39,7 +39,7 @@ uchar bef = 0xff;
 //	uchar start=0;
 
 
-CAL_STATE state = ONE;
+CAL_STATE state = INIT;
 unsigned char operator1, operator2;
 unsigned char operator3, operator4;
 double operand[3];
@@ -97,7 +97,7 @@ void scanf2(uchar *var) {
             if (K4 == 0) {
                 while (!K4);
                 clear();
-                state = ONE;
+                state = INIT;
                 index = 0;
                 num = '+';
                 break;
@@ -117,7 +117,7 @@ void scanf2(uchar *var) {
         }
 
     }
-    if (state == ONE) clear();
+    if (state == INIT) clear();
 }
 
 void PushOperArray(uchar *arr, int i, int locationOperand) {
@@ -229,7 +229,7 @@ void firstCaculate() {
                         m++;
                     }
                 }
-                state = ONE;
+                state = INIT;
             }
             break;
     }
@@ -269,7 +269,7 @@ void lastCaculate() {
                         m++;
                     }
                 }
-                state = ONE;
+                state = INIT;
             }
             break;
     }

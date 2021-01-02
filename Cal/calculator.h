@@ -35,7 +35,7 @@ extern uchar bef ;
 //	uchar start=0;
 
 typedef enum CAL_STATE {
-    ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, TOTAL_STATE
+    INIT, CORE, ADDMINS, MULTY, DIVIDESQRT, MULTYSQRT, DIVIDE, DONE, TOTAL_STATE
 } CAL_STATE;
 extern CAL_STATE state ;
 extern unsigned char operator1, operator2;
@@ -73,10 +73,10 @@ void showAnswer();
 
 
 
-void My_state_ONE() {
+void My_state_INIT() {
 
     if ((num >= '0' && num <= '9') && (index < MAX_LEN)) {
-        state = TWO;
+        state = CORE;
         QUEUE[index] = num;
         showData(num);
         index++;
@@ -86,15 +86,15 @@ void My_state_ONE() {
         operand1[0] = operand[0];
         operand1[1] = operand[1];
         operand1[2] = operand[2];
-        state = EIGHT;
+        state = DONE;
         showData(num);
     } else if (num == '~') {
-        state = EIGHT;
+        state = DONE;
         QUEUE[index] = num;
         showData(num);
         index++;
     } else if (num == '.') {
-        state = TWO;
+        state = CORE;
         QUEUE[index] = num;
         showData(num);
         index++;
@@ -103,15 +103,15 @@ void My_state_ONE() {
     }
 }
 
-void My_state_TWO() {
+void My_state_CORE() {
     if ((num >= '0' && num <= '9') && (index < MAX_LEN)) {
 
-        state = TWO;
+        state = CORE;
         QUEUE[index] = num;
         showData(num);
         index++;
     } else if (num == '+' || num == '-') {
-        state = THREE;
+        state = ADDMINS;
         PushOperArray(QUEUE, index, 0);
         //print(QUEUE,i);
         index = 0;
@@ -119,26 +119,26 @@ void My_state_TWO() {
         operator1 = num;
         showData(num);
     } else if (num == '*') {
-        state = FOUR;
+        state = MULTY;
         PushOperArray(QUEUE, index, 0);
         //print(QUEUE,i);
         index = 0;
         operator1 = num;
         showData(num);
     } else if (num == '/') {
-        state = FIVE;
+        state = DIVIDESQRT;
         PushOperArray(QUEUE, index, 0);
         //print(QUEUE,i);
         index = 0;
         operator1 = num;
         showData(num);
     } else if (num == '.') {
-        state = TWO;
+        state = CORE;
         QUEUE[index] = num;
         showData(num);
         index++;
     } else if (num == '=') {
-        state = ONE;
+        state = INIT;
         PushOperArray(QUEUE, index, 0);
         index = 0;
         showData(num);
@@ -150,15 +150,15 @@ void My_state_TWO() {
     }
 }
 
-void My_state_THREE() {
+void My_state_ADDMINS() {
     if ((num >= '0' && num <= '9') && (index < MAX_LEN)){
-        state = THREE;
+        state = ADDMINS;
         QUEUE[index] = num;
         showData(num);
         index++;
     } else if (num == '+' || num == '-') {       //A+B+
         //caculate();
-        state = THREE;
+        state = ADDMINS;
         PushOperArray(QUEUE, index, 1);
         index = 0;
         firstCaculate();
@@ -167,7 +167,7 @@ void My_state_THREE() {
 
 
     } else if (num == '*')  {
-        state = SIX;
+        state = MULTYSQRT;
         PushOperArray(QUEUE, index, 1);
         // print(QUEUE,i);
         index = 0;
@@ -175,7 +175,7 @@ void My_state_THREE() {
         operator2 = num;
         showData(num);
     } else if (num == '/') {
-        state = SEVEN;
+        state = DIVIDE;
         PushOperArray(QUEUE, index, 1);
         //print(QUEUE,i);
         index = 0;
@@ -183,17 +183,17 @@ void My_state_THREE() {
         operator2 = num;
         showData(num);
     } else if (num == '.') {
-        state = THREE;
+        state = ADDMINS;
         QUEUE[index] = num;
         showData(num);
         index++;
     } else if (num == '~') {
-        state = THREE;
+        state = ADDMINS;
         QUEUE[index] = num;
         showData(num);
         index++;
     } else if (num == '=') {
-        state = ONE;
+        state = INIT;
         PushOperArray(QUEUE, index, 1);
         index = 0;
         showData(num);
@@ -206,10 +206,10 @@ void My_state_THREE() {
         operand1[0] = operand[0];
         operand1[1] = operand[1];
         operand1[2] = operand[2];
-        state = EIGHT;
+        state = DONE;
         showData(num);
     } else if (num == ')') {
-        state = THREE;
+        state = ADDMINS;
         PushOperArray(QUEUE, index, 1);
         index = 0;
         firstCaculate();
@@ -226,15 +226,15 @@ void My_state_THREE() {
 }
 
 
-void My_state_FOUR() {
+void My_state_MULTY() {
     if ((num >= '0' && num <= '9') && (index < MAX_LEN)){
-        state = FOUR;
+        state = MULTY;
         QUEUE[index] = num;
         showData(num);
         index++;
     } else if (num == '+' || num == '-') {      //A*B+ --> A+
         //caculate();
-        state = THREE;
+        state = ADDMINS;
         PushOperArray(QUEUE, index, 1);
         index = 0;
         firstCaculate();
@@ -242,7 +242,7 @@ void My_state_FOUR() {
         showData(num);
     } else if (num == '*') {
         // caculate();
-        state = FOUR;
+        state = MULTY;
         PushOperArray(QUEUE, index, 1);
         // print(QUEUE,i);
         index = 0;
@@ -251,7 +251,7 @@ void My_state_FOUR() {
         showData(num);
     } else if (num == '/') {
         //caculate();
-        state = FIVE;
+        state = DIVIDESQRT;
         PushOperArray(QUEUE, index, 1);
         // print(QUEUE,i);
         index = 0;
@@ -259,17 +259,17 @@ void My_state_FOUR() {
         operator1 = num;
         showData(num);
     } else if (num == '.') {
-        state = FOUR;
+        state = MULTY;
         QUEUE[index] = num;
         showData(num);
         index++;
     } else if (num == '~') {
-        state = FOUR;
+        state = MULTY;
         QUEUE[index] = num;
         showData(num);
         index++;
     } else if (num == '=') {
-        state = ONE;
+        state = INIT;
         PushOperArray(QUEUE, index, 1);
         index = 0;
         showData(num);
@@ -282,10 +282,10 @@ void My_state_FOUR() {
         operand1[0] = operand[0];
         operand1[1] = operand[1];
         operand1[2] = operand[2];
-        state = EIGHT;
+        state = DONE;
         showData(num);
     } else if (num == ')') {
-        state = THREE;
+        state = ADDMINS;
         PushOperArray(QUEUE, index, 1);
         index = 0;
         firstCaculate();
@@ -301,15 +301,15 @@ void My_state_FOUR() {
     }
 }
 
-void My_state_FIVE() {
+void My_state_DIVIDESQRT() {
     if ((num >= '0' && num <= '9') && (index < MAX_LEN)) {
-        state = FIVE;
+        state = DIVIDESQRT;
         QUEUE[index] = num;
         showData(num);
         index++;
     } else if (num == '+' || num == '-') {
         // caculate();
-        state = THREE;
+        state = ADDMINS;
         PushOperArray(QUEUE, index, 1);
         //print(QUEUE,i);
         index = 0;
@@ -318,7 +318,7 @@ void My_state_FIVE() {
         showData(num);
     } else if (num == '*') {
         //caculate();
-        state = FOUR;
+        state = MULTY;
         PushOperArray(QUEUE, index, 1);
         // print(QUEUE,i);
         index = 0;
@@ -327,7 +327,7 @@ void My_state_FIVE() {
         showData(num);
     } else if (num == '/') {
         //caculate();
-        state = FIVE;
+        state = DIVIDESQRT;
         PushOperArray(QUEUE, index, 1);
         // print(QUEUE,i);
         index = 0;
@@ -335,17 +335,17 @@ void My_state_FIVE() {
         operator1 = num;
         showData(num);
     } else if (num == '.') {
-        state = FIVE;
+        state = DIVIDESQRT;
         QUEUE[index] = num;
         showData(num);
         index++;
     } else if (num == '~') {
-        state = FIVE;
+        state = DIVIDESQRT;
         QUEUE[index] = num;
         showData(num);
         index++;
     } else if (num == '=') {
-        state = ONE;
+        state = INIT;
         PushOperArray(QUEUE, index, 1);
         index = 0;
         showData(num);
@@ -358,10 +358,10 @@ void My_state_FIVE() {
         operand1[0] = operand[0];
         operand1[1] = operand[1];
         operand1[2] = operand[2];
-        state = EIGHT;
+        state = DONE;
         showData(num);
     } else if (num == ')') {
-        state = THREE;
+        state = ADDMINS;
         PushOperArray(QUEUE, index, 1);
         index = 0;
         firstCaculate();
@@ -377,17 +377,17 @@ void My_state_FIVE() {
     }
 }
 
-void My_state_SIX() {
+void My_state_MULTYSQRT() {
 
     if ((num >= '0' && num <= '9') && (index < MAX_LEN)) {
-        state = SIX;
+        state = MULTYSQRT;
         QUEUE[index] = num;
         showData(num);
         index++;
     } else if (num == '+' || num == '-') {
         // caculate();
         // caculate();
-        state = THREE;
+        state = ADDMINS;
         PushOperArray(QUEUE, index, 2);
         //print(QUEUE,i);
         index = 0;
@@ -398,7 +398,7 @@ void My_state_SIX() {
 
     } else if (num == '*') {
         //caculate();
-        state = SIX;
+        state = MULTYSQRT;
         PushOperArray(QUEUE, index, 2);
         // print(QUEUE,i);
         index = 0;
@@ -407,7 +407,7 @@ void My_state_SIX() {
         showData(num);
     } else if (num == '/') {
         //caculate();
-        state = SEVEN;
+        state = DIVIDE;
         PushOperArray(QUEUE, index, 2);
         // print(QUEUE,i);
         index = 0;
@@ -415,17 +415,17 @@ void My_state_SIX() {
         operator2 = num;
         showData(num);
     } else if (num == '.') {
-        state = SIX;
+        state = MULTYSQRT;
         QUEUE[index] = num;
         showData(num);
         index++;
     } else if (num == '~') {
-        state = SIX;
+        state = MULTYSQRT;
         QUEUE[index] = num;
         showData(num);
         index++;
     } else if (num == '=') {
-        state = ONE;
+        state = INIT;
         PushOperArray(QUEUE, index, 2);
         index = 0;
         showData(num);
@@ -439,10 +439,10 @@ void My_state_SIX() {
         operand1[0] = operand[0];
         operand1[1] = operand[1];
         operand1[2] = operand[2];
-        state = EIGHT;
+        state = DONE;
         showData(num);
     } else if (num == ')') {
-        state = THREE;
+        state = ADDMINS;
         PushOperArray(QUEUE, index, 1);
         index = 0;
         lastCaculate();
@@ -459,14 +459,14 @@ void My_state_SIX() {
     }
 }
 
-void My_state_SEVEN() {
+void My_state_DIVIDE() {
     if ((num >= '0' && num <= '9') && (index < MAX_LEN)) {
-        state = SEVEN;
+        state = DIVIDE;
         QUEUE[index] = num;
         showData(num);
         index++;
     } else if (num == '+' || num == '-') {
-        state = THREE;
+        state = ADDMINS;
         PushOperArray(QUEUE, index, 2);
         // print(QUEUE,i);
         index = 0;
@@ -476,7 +476,7 @@ void My_state_SEVEN() {
         showData(num);
     } else if (num == '*') {
         //caculate();
-        state = SIX;
+        state = MULTYSQRT;
         PushOperArray(QUEUE, index, 2);
         // print(QUEUE,i);
         index = 0;
@@ -484,24 +484,24 @@ void My_state_SEVEN() {
         operator2 = num;
         showData(num);
     } else if (num == '/') {
-        state = SEVEN;
+        state = DIVIDE;
         PushOperArray(QUEUE, index, 2);
         index = 0;
         lastCaculate();
         operator2 = num;
         showData(num);
     } else if (num == '.') {
-        state = SEVEN;
+        state = DIVIDE;
         QUEUE[index] = num;
         showData(num);
         index++;
     } else if (num == '~') {
-        state = SEVEN;
+        state = DIVIDE;
         QUEUE[index] = num;
         showData(num);
         index++;
     } else if (num == '=') {
-        state = ONE;
+        state = INIT;
         PushOperArray(QUEUE, index, 2);
         index = 0;
         showData(num);
@@ -515,10 +515,10 @@ void My_state_SEVEN() {
         operand1[0] = operand[0];
         operand1[1] = operand[1];
         operand1[2] = operand[2];
-        state = EIGHT;
+        state = DONE;
         showData(num);
     } else if (num == ')') {
-        state = THREE;
+        state = ADDMINS;
         PushOperArray(QUEUE, index, 1);
         index = 0;
         lastCaculate();
@@ -536,9 +536,9 @@ void My_state_SEVEN() {
 }
 
 
-void My_state_EIGHT() {
+void My_state_DONE() {
     if ((num >= '0' && num <= '9') && (index < MAX_LEN)) {
-        state = TWO;
+        state = CORE;
         QUEUE[index] = num;
         showData(num);
         index++;
@@ -548,10 +548,10 @@ void My_state_EIGHT() {
         operand1[0] = operand[0];
         operand1[1] = operand[1];
         operand1[2] = operand[2];
-        state = EIGHT;
+        state = DONE;
         showData(num);
     } else if (num == '~') {
-        state = EIGHT;
+        state = DONE;
         QUEUE[index] = num;
         showData(num);
         index++;
@@ -562,13 +562,13 @@ void My_state_EIGHT() {
 typedef void(*state_func)();
 
 state_func states[TOTAL_STATE]={
-    My_state_ONE,
-    My_state_TWO,
-    My_state_THREE,
-    My_state_FOUR,
-    My_state_FIVE,
-    My_state_SIX,
-    My_state_SEVEN,
-    My_state_EIGHT
+    My_state_INIT,
+    My_state_CORE,
+    My_state_ADDMINS,
+    My_state_MULTY,
+    My_state_DIVIDESQRT,
+    My_state_MULTYSQRT,
+    My_state_DIVIDE,
+    My_state_DONE
 };
 #endif //AUTOMACHINEGENERATOR_CALCULATOR_H
